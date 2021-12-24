@@ -179,3 +179,64 @@ ofPath ofxHersheyFont::getPath(string stringValue, float xPos, float yPos, float
 
 	return path;
 }
+//--------------------------------------------------------------
+string ofxHersheyFont::getPath_asPythonString(string stringValue, string prefix, float xPos, float yPos, float scale) {
+
+    string str_path = "";
+
+    //iterate through each character of the input string
+    for (int i = 0; i < stringValue.size(); i++)
+    {
+        //get ascii value of specific character from the inout string
+        int asciiValue = stringValue.at(i);
+
+        //only draw character if vectors are available, otherwise draw questionmark
+        if (asciiValue < 32 || asciiValue > 126) asciiValue = 63;
+
+        //moveto first coordinate of the character
+//        path.moveTo(xPos + simplex[asciiValue - 32][2] * scale, yPos + (-1) * simplex[asciiValue - 32][3] * scale);
+        str_path += prefix;
+        str_path += "moveto(";
+        str_path += ofToString(xPos + simplex[asciiValue - 32][2] * scale,2);
+        str_path += ",";
+        str_path += ofToString(yPos + (-1) * simplex[asciiValue - 32][3] * scale,2);
+        str_path += ")\n";
+        
+        //iterate through points of each character
+        for (int j = 4; j <= simplex[asciiValue - 32][0] * 2; j += 2)
+        {
+            int x = simplex[asciiValue - 32][j];
+            int y = (-1) * simplex[asciiValue - 32][j + 1];
+
+            if (x != -1){
+//                path.lineTo(xPos + x * scale, yPos + y * scale);
+                str_path += prefix;
+                str_path += "lineto(";
+                str_path += ofToString(xPos + x * scale,2);
+                str_path += ",";
+                str_path += ofToString(yPos + y * scale,2);
+                str_path += ")\n";
+            }
+            
+            if (x == -1) {
+//                path.moveTo(xPos + simplex[asciiValue - 32][j + 2] * scale, yPos + (-1) * simplex[asciiValue - 32][j + 3] * scale);
+                str_path += prefix;
+                str_path += "moveto(";
+                str_path += ofToString(xPos + simplex[asciiValue - 32][j + 2] * scale,2);
+                str_path += ",";
+                str_path += ofToString(yPos + (-1) * simplex[asciiValue - 32][j + 3] * scale,2);
+                str_path += ")\n";
+                j += 2;
+            }
+        }
+
+        //at the end of each character, set xPos to starting coordinate of next character
+        xPos += (float)simplex[asciiValue - 32][1] * scale;
+    }
+
+//    path.setStrokeColor(color);
+//    path.setStrokeWidth(1);
+//    path.setFilled(false);
+
+    return str_path;
+}

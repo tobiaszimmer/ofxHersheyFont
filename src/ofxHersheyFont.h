@@ -27,6 +27,7 @@ class ofxHersheyFont {
 		float getHeight(float scale);
 		ofPath getPath(string stringValue, float scale);
 		ofPath getPath(string stringValue, float xPos, float yPos, float scale);
+    string getPath_asPythonString(string stringValue, string prefix, float xPos, float yPos, float scale);
 
 		ofColor color;
 
