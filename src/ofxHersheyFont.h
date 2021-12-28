@@ -28,9 +28,14 @@ public:
     ofPath getPath(string stringValue, float scale);
     ofPath getPath(string stringValue, float xPos, float yPos, float scale);
     
+    ofPath getPathFromAscii(int asciiValue, float scale);
+    ofPath getPathFromXML(ofXml xmlElement, float scale);
+    
     ofColor color;
     
     //stephan
+    string getPath_asPythonString(string stringValue, string prefix, float xPos, float yPos, float scale);
+    
     ofXml svgFontFile;
     void loadSVGFont(string _fontPath);
     bool useSVGfont = false;

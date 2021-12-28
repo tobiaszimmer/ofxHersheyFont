@@ -39,8 +39,8 @@ void ofApp::draw(){
         hersheyFont.draw(myString, 200, tempY+=30, .025, false);
         ofDrawBitmapString(fontDict.getName(i), 5, tempY);
     }
-    
-    
+    hersheyFont.useSVGfont = false;
+    hersheyFont.draw("default simplex font", 200,ofGetHeight()-100, 1, true);
 }
 
 //--------------------------------------------------------------
