@@ -14,15 +14,14 @@
 #include "ofxHersheyFont.h"
 
 class ofApp : public ofBaseApp{
-
-	public:
-		void setup();
-		void update();
-		void draw();
-		void keyReleased(int key);
-
-		void drawFont();
-
-		ofxHersheyFont hersheyFont;
+    
+public:
+    void setup();
+    void update();
+    void draw();
+    void keyReleased(int key);
+    
+    
+    ofxHersheyFont hersheyFont;
     ofDirectory fontDict;
 };

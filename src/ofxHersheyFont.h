@@ -19,29 +19,36 @@ class ofxHersheyFont {
 public:
     ofxHersheyFont();
     
-    void draw(string stringValue, float x, float y, float scale);
-    void draw(string stringValue, float x, float y, float scale, bool centered);
+    void draw(string stringValue, float x, float y, float scale){
+        draw(stringValue, x, y, scale, false, 0);
+    }
+    void draw(string stringValue, float x, float y, float scale, bool centered){
+        draw(stringValue, x, y, scale, centered, 0);
+    }
     void draw(string stringValue, float x, float y, float scale, bool centered, float angle);
     void setColor(ofColor c);
     float getWidth(string stringValue, float scale);
     float getHeight(float scale);
-    ofPath getPath(string stringValue, float scale);
-    ofPath getPath(string stringValue, float xPos, float yPos, float scale);
+    ofPath getPath(string stringValue, float scale, float yFlip = -1){
+        return getPath(stringValue, 0, 0, scale, yFlip);
+    };
+    ofPath getPath(string stringValue, float xPos, float yPos, float scale, float yFlip = -1);
     
-    ofPath getPathFromAscii(int asciiValue, float scale);
-    ofPath getPathFromXML(ofXml xmlElement, float scale);
+  
+    filesystem::path fontPath;
+    string fontName;
     
     ofColor color;
     
     //stephan
     string getPath_asPythonString(string stringValue, string prefix, float xPos, float yPos, float scale);
+    string getPath_AsciiAsPythonString(string stringValue, string prefix, float xPos, float yPos, float scale);
     
     ofXml svgFontFile;
-    void loadSVGFont(string _fontPath);
-    bool useSVGfont = false;
+    void loadSVGFont(filesystem::path _fontPath);
+
 private:
-    void drawChar(int asciiValue);
-    void drawSVGchar(ofXml xmlElement);
+    void drawChar(ofXml xmlElement);
 };
 
 
