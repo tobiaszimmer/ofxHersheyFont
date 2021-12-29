@@ -29,10 +29,10 @@ public:
     void setColor(ofColor c);
     float getWidth(string stringValue, float scale);
     float getHeight(float scale);
-    ofPath getPath(string stringValue, float scale, float yFlip = -1){
+    ofPath getPath(string stringValue, float scale, int yFlip = -1){
         return getPath(stringValue, 0, 0, scale, yFlip);
     };
-    ofPath getPath(string stringValue, float xPos, float yPos, float scale, float yFlip = -1);
+    ofPath getPath(string stringValue, float xPos, float yPos, float scale, int yFlip = -1);
     
   
     filesystem::path fontPath;
@@ -41,9 +41,8 @@ public:
     ofColor color;
     
     //stephan
-    string getPath_asPythonString(string stringValue, string prefix, float xPos, float yPos, float scale);
-    string getPath_AsciiAsPythonString(string stringValue, string prefix, float xPos, float yPos, float scale);
-    
+    string getPath_asPythonString(string stringValue, string prefix, float xPos, float yPos, float scale, int yFlip = -1);
+ 
     ofXml svgFontFile;
     void loadSVGFont(filesystem::path _fontPath);
 

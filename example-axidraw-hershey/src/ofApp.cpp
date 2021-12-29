@@ -17,8 +17,8 @@ void ofApp::setup(){
 //    hersheyFont.loadSVGFont(ofToDataPath("svg-fonts-master/fonts/Hershey/HersheySansMed.svg"));
 //    hersheyFont.loadSVGFont(ofToDataPath("svg-fonts-master/fonts/EMS/EMSSwiss.svg"));
 
-    fontDict.listDir(ofToDataPath("svg-fonts-master/fonts/Hershey"));
-    fontDict.listDir(ofToDataPath("svg-fonts-master/fonts/EMS"));
+    fontDict.listDir(ofToDataPath("../../../svg-fonts/fonts/Hershey",true));
+//    fontDict.listDir(ofToDataPath("../../../svg-fonts/fonts/EMS",true));
     //set color of the font (default is black)
 	hersheyFont.setColor(ofColor(0));
 }
@@ -44,11 +44,14 @@ void ofApp::draw(){
    
     //getPath
     //if you need more flexibility, you can get the font vectors as ofPath
-    hersheyFont.loadSVGFont(ofToDataPath("svg-fonts-master/fonts/Hershey/HersheySans1.svg"));
+    
+    hersheyFont.loadSVGFont(ofToDataPath("../../../svg-fonts/fonts/Hershey/HersheySans1.svg",true));
+//    hersheyFont.loadSVGFont(ofToDataPath("svg-fonts-master/fonts/EMS/EMSMistyNight.svg"));
     ofPath p = hersheyFont.getPath(myString, 0.03);
     p.draw(200,tempY+=60);
     ofDrawBitmapString(hersheyFont.fontName+" as path", 5, tempY);
     
+    ofLog()<<"hersheyFont height "<<hersheyFont.getHeight(0.03);
 }
 
 

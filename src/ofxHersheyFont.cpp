@@ -92,63 +92,10 @@ void ofxHersheyFont::draw(string stringValue, float xPos, float yPos, float scal
     ofTranslate(xPos, yPos);
     ofRotateDeg(angle);
     ofTranslate(-center, 0);
-    ofLog()<<"center "<<center;
-    ofPath charPath;
-    charPath = getPath(stringValue,scale);
+    
+    ofPath charPath = getPath(stringValue,scale);
     charPath.draw();
-    /*
-    //iterate through each character of the input string
-    for (int i = 0; i < stringValue.size(); i++)
-    {
-        ofPushMatrix();
-        ofTranslate(characterXPos, 0);
-        //        ofScale(scale, -scale);
-        ofScale(1, -1);
-        
-        ofPath charPath;
-        
-        float charWidth = 0;
-        
-        string nextChar = ofToString(stringValue.at(i));
-        
-        //            ofLog()<<"svgFontFile.findFirst "<<svgFontFile.findFirst("/svg/defs/font/glyph[@unicode='!']"); 
-        //            ofLog()<<"svgFontFile.findFirst "<<svgFontFile.findFirst("/svg/defs/font/glyph[@unicode='!']").getAttribute("glyph-name").getValue(); 
-        string elementPath = "/svg/defs/font/glyph[@unicode='"+nextChar+"']";
    
-        if(svgFontFile.findFirst(elementPath) == 0 ){
-            nextChar = "?";
-            elementPath = "/svg/defs/font/glyph[@unicode='"+nextChar+"']";
-            ofLog()<<"char not in svg replace with question mark";
-        }
-        //            ofLog()<<"svg character:"<<nextChar;
-        
-        charPath = getPath(nextChar,scale, 1); //svgFontFile.findFirst(elementPath),scale);
-        charWidth = ofToFloat(svgFontFile.findFirst(elementPath).getAttribute("horiz-adv-x").getValue());
-        
-//        if(svgFontFile.findFirst(elementPath) == 1 ){
-//            //                drawSVGchar(svgFontFile.findFirst(elementPath));
-//            charPath = getPath(nextChar,scale); //svgFontFile.findFirst(elementPath),scale);
-//            charWidth = ofToFloat(svgFontFile.findFirst(elementPath).getAttribute("horiz-adv-x").getValue());
-//            //                ofLog()<<"width "<<charWidth;
-//        }else{
-//            //                int asciiValue = 63;
-//            ////                drawChar(asciiValue);
-//            //                charPath = getPathFromAscii(asciiValue,scale);
-//            //                //update xPos / starting position for the next character
-//            //                charWidth = simplex[asciiValue - 32][1] * scale;
-//            
-//            ofLog()<<"char not in svg replace with simplexCharacter ?";
-//        }
-        //            ofLog()<<"svgFontFile.findFirst "<<svgFontFile.findFirst("/svg/defs/font/glyph[@unicode='!']").getAttribute("glyph-name").getValue(); 
-        
-        
-        
-        charPath.draw();
-        
-        characterXPos += (charWidth * scale);
-        ofPopMatrix();
-    }
-    */
     ofPopMatrix();
 }
 
@@ -178,63 +125,28 @@ float ofxHersheyFont::getWidth(string stringValue, float scale){
         float charWidth = ofToFloat(xmlElement.getAttribute("horiz-adv-x").getValue());
         stringWidth += charWidth * scale;
     }
-//    ofLog()<<"getWidth() "<<stringWidth;
+    
     return stringWidth;
 }
 
 //--------------------------------------------------------------
 float ofxHersheyFont::getHeight(float scale) {
     //the height of a capital letter is 21px (scale 1)
-    float stringHeight = (float) 21 * scale;
+    
+    
+    ofPath charPath = getPath("I",scale);
+    ofLog()<<"charPath.getOutline() "<<charPath.getOutline().size();
+    ofPolyline charPolyline;
+    for(auto & aLine : charPath.getOutline()){
+        charPolyline.addVertices(aLine.getVertices());
+    }
+    float stringHeight = charPolyline.getBoundingBox().getHeight();
     
     return stringHeight;
 }
 
-
-////--------------------------------------------------------------
-//ofPath ofxHersheyFont::getPath(string stringValue, float xPos, float yPos, float scale) {
-//    
-//    ofPath path;
-//    
-//    //iterate through each character of the input string
-//    for (int i = 0; i < stringValue.size(); i++)
-//    {
-//        //get ascii value of specific character from the inout string
-//        int asciiValue = stringValue.at(i);
-//        
-//        //only draw character if vectors are available, otherwise draw questionmark
-//        if (asciiValue < 32 || asciiValue > 126) asciiValue = 63;
-//        
-////        getPathFromAscii(asciiValue, scale);
-//        //moveto first coordinate of the character
-//        path.moveTo(xPos + simplex[asciiValue - 32][2] * scale, yPos + (-1) * simplex[asciiValue - 32][3] * scale);
-//        
-//        //iterate through points of each character
-//        for (int j = 4; j <= simplex[asciiValue - 32][0] * 2; j += 2)
-//        {
-//            int x = simplex[asciiValue - 32][j];
-//            int y = (-1) * simplex[asciiValue - 32][j + 1];
-//            
-//            if (x != -1) path.lineTo(xPos + x * scale, yPos + y * scale);
-//            
-//            if (x == -1) {
-//                path.moveTo(xPos + simplex[asciiValue - 32][j + 2] * scale, yPos + (-1) * simplex[asciiValue - 32][j + 3] * scale);
-//                j += 2;
-//            }
-//        }
-//        
-//        //at the end of each character, set xPos to starting coordinate of next character
-//        xPos += (float)simplex[asciiValue - 32][1] * scale;
-//    }
-//    
-//    path.setStrokeColor(color);
-//    path.setStrokeWidth(1);
-//    path.setFilled(false);
-//    
-//    return path;
-//}
-
-ofPath ofxHersheyFont::getPath(string stringValue, float x, float y, float scale, float yFlip){
+//--------------------------------------------------------------
+ofPath ofxHersheyFont::getPath(string stringValue, float x, float y, float scale, int yFlip){
 
     ofPath charPath;
     
@@ -277,98 +189,49 @@ ofPath ofxHersheyFont::getPath(string stringValue, float x, float y, float scale
     return charPath;
 }
 
-////--------------------------------------------------------------
-//string ofxHersheyFont::getPath_asPythonString(string stringValue, string prefix, float xPos, float yPos, float scale) {
-//    string str_path = "";
-//    
-//    if(useSVGfont == false){
-//        str_path = getPath_AsciiAsPythonString(stringValue,prefix,xPos,yPos,scale);
-//    }else{
-//        str_path = getPath_XmlAsPythonString(stringValue,prefix,xPos,yPos,scale);
-//    }
-//    
-//    return str_path;
-//}
 //--------------------------------------------------------------
-string ofxHersheyFont::getPath_asPythonString(string stringValue, string prefix, float xPos, float yPos, float scale) {
+string ofxHersheyFont::getPath_asPythonString(string stringValue, string prefix, float x, float y, float scale, int yFlip) {
     string str_path = "";
-    /*
+
     //iterate through each character of the input string
     for (int i = 0; i < stringValue.size(); i++)
     {
+    
         string nextChar = ofToString(stringValue.at(i));
         string elementPath = "/svg/defs/font/glyph[@unicode='"+nextChar+"']";
         
-        if(svgFontFile.findFirst(elementPath) == 1 ){
-            //                drawSVGchar(svgFontFile.findFirst(elementPath));
-            charPath = getPathFromXML(svgFontFile.findFirst(elementPath),scale);
-            charWidth = ofToFloat(svgFontFile.findFirst(elementPath).getAttribute("horiz-adv-x").getValue());
-            //                ofLog()<<"width "<<charWidth;
-        }else{
-            ofLog()<<"char not in svg, replace with simplexCharacter ?";
+        if(svgFontFile.findFirst(elementPath) == 0 ){
+            ofLog()<<"char "<<nextChar<<" not in svg replace with question mark";
+            nextChar = "?";
+            elementPath = "/svg/defs/font/glyph[@unicode='"+nextChar+"']";
         }
         
-    }
-     */
-    return str_path;
-}
-
-//--------------------------------------------------------------
-string ofxHersheyFont::getPath_AsciiAsPythonString(string stringValue, string prefix, float xPos, float yPos, float scale) {
-
-    string str_path = "";
-
-    /*
-    //iterate through each character of the input string
-    for (int i = 0; i < stringValue.size(); i++)
-    {
-        //get ascii value of specific character from the inout string
-        int asciiValue = stringValue.at(i);
-
-        //only draw character if vectors are available, otherwise draw questionmark
-        if (asciiValue < 32 || asciiValue > 126) asciiValue = 63;
-
-        //moveto first coordinate of the character
-//        path.moveTo(xPos + simplex[asciiValue - 32][2] * scale, yPos + (-1) * simplex[asciiValue - 32][3] * scale);
-        str_path += prefix;
-        str_path += "moveto(";
-        str_path += ofToString(xPos + simplex[asciiValue - 32][2] * scale,2);
-        str_path += ",";
-        str_path += ofToString(yPos + (-1) * simplex[asciiValue - 32][3] * scale,2);
-        str_path += ")\n";
+        ofXml xmlElement = svgFontFile.findFirst(elementPath);
         
-        //iterate through points of each character
-        for (int j = 4; j <= simplex[asciiValue - 32][0] * 2; j += 2)
-        {
-            int x = simplex[asciiValue - 32][j];
-            int y = (-1) * simplex[asciiValue - 32][j + 1];
-
-            if (x != -1){
-//                path.lineTo(xPos + x * scale, yPos + y * scale);
-                str_path += prefix;
-                str_path += "lineto(";
-                str_path += ofToString(xPos + x * scale,2);
-                str_path += ",";
-                str_path += ofToString(yPos + y * scale,2);
-                str_path += ")\n";
-            }
-            
-            if (x == -1) {
-//                path.moveTo(xPos + simplex[asciiValue - 32][j + 2] * scale, yPos + (-1) * simplex[asciiValue - 32][j + 3] * scale);
-                str_path += prefix;
+        float charWidth = ofToFloat(xmlElement.getAttribute("horiz-adv-x").getValue());
+        
+        vector<string> splitGlyphPath = ofSplitString(xmlElement.getAttribute("d").getValue(), " ");//glyph path data in SVG looks like this: "M 139 -9.45 L 230 18.9 L 299 22.1 L 227 25.2"
+        
+        for(int i=0; i<splitGlyphPath.size(); i+=3){
+            str_path += prefix;
+            if(splitGlyphPath[i] == "M"){
                 str_path += "moveto(";
-                str_path += ofToString(xPos + simplex[asciiValue - 32][j + 2] * scale,2);
+                str_path += ofToString(x+ofToFloat(splitGlyphPath[i+1])* scale,2);
                 str_path += ",";
-                str_path += ofToString(yPos + (-1) * simplex[asciiValue - 32][j + 3] * scale,2);
+                str_path += ofToString(y+ yFlip * ofToFloat(splitGlyphPath[i+2])* scale,2);
                 str_path += ")\n";
-                j += 2;
+            }else if(splitGlyphPath[i] == "L"){       
+                str_path += "lineto(";
+                str_path += ofToString(x+ofToFloat(splitGlyphPath[i+1])* scale,2);
+                str_path += ",";
+                str_path += ofToString(y+ yFlip * ofToFloat(splitGlyphPath[i+2])* scale,2);
+                str_path += ")\n";
             }
         }
-
-        //at the end of each character, set xPos to starting coordinate of next character
-        xPos += (float)simplex[asciiValue - 32][1] * scale;
+        
+        x += (charWidth*scale);
     }
-*/
-
+    
     return str_path;
 }
+
