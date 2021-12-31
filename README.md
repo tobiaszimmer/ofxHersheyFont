@@ -25,6 +25,7 @@ Tested on
 
 ## Credits
 The Hershey Font was developed by Dr. Allen V. Hershey in 1967.
+
 The original addon by [tobiaszimmer](https://github.com/tobiaszimmer/ofxHersheyFont) contained the 'Simplex' characters of the Hershey Font (ASCII codes 32 – 126), which were made available by Paul Bourke.
 http://paulbourke.net/dataformats/hershey/
 
