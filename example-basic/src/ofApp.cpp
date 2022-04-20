@@ -14,6 +14,7 @@
 void ofApp::setup(){
 	ofBackground(255);
 
+    hersheyFont.loadSVGFont(ofToDataPath("../../../svg-fonts/fonts/Hershey/HersheySans1.svg",true));
 	//set color of the font (default is black)
 	hersheyFont.setColor(ofColor(0));
 }
@@ -46,32 +47,31 @@ void ofApp::drawFont() {
 		for (int x = 0; x < 10; x++)
 		{
 			string character = ofToString((char)asciiCode);
-			hersheyFont.draw(character, 20 + x * 40, 210 + y * 40, 1);
+			hersheyFont.draw(character, 20 + x * 40, 210 + y * 40, 0.03);
 			asciiCode++;
 		}
 	}
 
 	//simple
 	//inputs: string, xPos,	yPos, scale
-	hersheyFont.draw("size 0.5", 600, 210, .5);
-	hersheyFont.draw("size 1", 720, 210, 1);
-	hersheyFont.draw("size 1.5", 870, 210, 1.5);
+	hersheyFont.draw("size 0.03", 600, 210, 0.03);
+	hersheyFont.draw("size 0.1", 720, 210, 0.1);
 
 	//centered
 	//inputs: string, xPos, yPos, scale, centered
-	hersheyFont.draw("CENTERED", 800, 290, .75, true);
-	hersheyFont.draw("CENTERED CENTERED", 800, 290 + 40, .75, true);
+	hersheyFont.draw("CENTERED", 800, 290, 0.03, true);
+	hersheyFont.draw("CENTERED CENTERED", 800, 290 + 40, 0.03, true);
 
 	//rotated
 	//inputs: string, xPos, yPos, scale, centered, angle
-	hersheyFont.draw("ROTATE", 610, 450, .75, false, mouseX);
+	hersheyFont.draw("ROTATE", 610, 450, 0.03, false, mouseX);
 
 	//rotate centered
-	hersheyFont.draw("ROTATE CENTERED", 940, 450, .75, true, mouseX);
+	hersheyFont.draw("ROTATE CENTERED", 940, 450, 0.03, true, mouseX);
 
 	//getPath
 	//if you need more flexibility, you can get the font vectors as ofPath
-	ofPath p = hersheyFont.getPath("GETPATH", .75);
+	ofPath p = hersheyFont.getPath("GETPATH", 0.03);
 	p.draw(765, 570);
 }
 
